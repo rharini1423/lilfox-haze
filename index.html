@@ -2,98 +2,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Fox Word Search</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(135deg, #f0fff0, #e6ffe6);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             min-height: 100vh;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .container {
+            width: 90%;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 10px auto;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border: 3px solid #a8d8a8;
             background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path fill="%23d4f3d4" d="M0 0h100v100H0z"/></svg>');
             background-size: 200px;
         }
-        
+
         h1 {
+            font-size: clamp(18px, 5vw, 28px);
+            padding: 6px;
+            margin-bottom: 6px;
             text-align: center;
-            color: #5a8f5a;
-            font-size: 28px;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 3vw, 16px);
+            padding: 5px;
             margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px;
-            border-radius: 15px;
-            border: 2px dashed #a8d8a8;
+            text-align: center;
+        }
+
+        .fox-emoji {
+            font-size: clamp(30px, 8vw, 40px);
+            text-align: center;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         
-        .subtitle {
+        .instructions {
             text-align: center;
             color: #7dac7d;
-            font-size: 16px;
-            margin-bottom: 20px;
-            font-style: italic;
+            margin-bottom: 15px;
+            font-size: clamp(12px, 3vw, 14px);
             background: rgba(255, 255, 255, 0.6);
             padding: 8px;
             border-radius: 10px;
-            display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            width: fit-content;
+            border: 1px dashed #a8d8a8;
         }
         
         .grid {
             display: grid;
-            grid-template-columns: repeat(8, 40px);
-            grid-template-rows: repeat(8, 40px);
+            grid-template-columns: repeat(8, minmax(25px, 1fr));
+            grid-template-rows: repeat(8, minmax(25px, 1fr));
             gap: 2px;
-            justify-content: center;
-            margin: 30px 0;
+            margin: 15px 0;
             background: #d4f3d4;
-            padding: 15px;
-            border-radius: 15px;
+            padding: 8px;
+            border-radius: 12px;
             border: 2px solid #a8d8a8;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+            aspect-ratio: 1/1;
+            max-width: 100%;
+            overflow: hidden;
+            touch-action: none;
         }
-        
+
         .cell {
-            width: 40px;
-            height: 40px;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: white;
             border: 1px solid #d4f3d4;
             font-weight: bold;
-            font-size: 18px;
+            font-size: clamp(12px, 3vw, 18px);
             cursor: pointer;
             transition: all 0.2s;
-            border-radius: 8px;
+            border-radius: 6px;
             color: #5a8f5a;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            user-select: none;
+            -webkit-user-select: none;
         }
         
         .cell:hover {
             background: #e8f8e8;
-            transform: scale(1.05);
         }
         
         .cell.found {
             background: #a8d8a8;
             color: white;
             animation: bounce 0.5s;
-            box-shadow: 0 0 10px rgba(168, 216, 168, 0.7);
+            box-shadow: 0 0 8px rgba(168, 216, 168, 0.7);
         }
         
         @keyframes bounce {
@@ -101,35 +112,17 @@
                 transform: translateY(0);
             }
             40% {
-                transform: translateY(-8px);
+                transform: translateY(-5px);
             }
             60% {
-                transform: translateY(-4px);
+                transform: translateY(-3px);
             }
-        }
-        
-        .fox-emoji {
-            font-size: 40px;
-            text-align: center;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .instructions {
-            text-align: center;
-            color: #7dac7d;
-            margin-bottom: 20px;
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px dashed #a8d8a8;
         }
         
         .progress {
             text-align: center;
-            margin-top: 20px;
-            font-size: 16px;
+            margin-top: 15px;
+            font-size: clamp(14px, 3vw, 16px);
             color: #5a8f5a;
             background: rgba(255, 255, 255, 0.6);
             padding: 8px;
@@ -138,31 +131,30 @@
         
         .watercolor-decoration {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             background: radial-gradient(circle, rgba(168,216,168,0.3) 0%, rgba(168,216,168,0) 70%);
             border-radius: 50%;
             z-index: -1;
         }
         
         .decoration-1 {
-            top: 10%;
-            left: 10%;
+            top: 5%;
+            left: 5%;
         }
         
         .decoration-2 {
-            bottom: 10%;
-            right: 10%;
+            bottom: 5%;
+            right: 5%;
         }
 
-        /* Add these new styles at the end of your existing CSS */
         .celebration {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -171,6 +163,8 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s ease-out;
+            padding: 20px;
+            box-sizing: border-box;
         }
         
         .celebration.active {
@@ -179,10 +173,10 @@
         }
         
         .celebration-message {
-            font-size: 3rem;
+            font-size: clamp(2rem, 6vw, 3rem);
             color: #5a8f5a;
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             transform: scale(0.5);
             transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -192,15 +186,14 @@
         }
         
         .celebration-fox {
-            font-size: 5rem;
+            font-size: clamp(3rem, 10vw, 5rem);
             animation: bounce 2s infinite;
         }
         
         .celebration-confetti {
             position: absolute;
-            width: 15px;
-            height: 15px;
-            background-color: #f00;
+            width: 10px;
+            height: 10px;
             opacity: 0;
         }
         
@@ -216,22 +209,43 @@
         }
         
         .celebration-button {
-            margin-top: 2rem;
-            padding: 12px 24px;
+            margin-top: 1.5rem;
+            padding: 10px 20px;
             background: #a8d8a8;
             color: white;
             border: none;
-            border-radius: 30px;
-            font-size: 1.2rem;
+            border-radius: 25px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
         
         .celebration-button:hover {
             background: #8bc38b;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+                border-radius: 15px;
+            }
+            
+            .grid {
+                padding: 6px;
+                border-radius: 10px;
+            }
+            
+            .cell {
+                border-radius: 4px;
+            }
+            
+            .watercolor-decoration {
+                width: 80px;
+                height: 80px;
+            }
         }
     </style>
 </head>
@@ -245,7 +259,7 @@
         
         <div class="fox-emoji">🦊 🌿 🍄</div>
         
-        <p class="instructions">Click and drag to select words. They can be horizontal, vertical, or diagonal!</p>
+        <p class="instructions">Tap and drag to select words. They can be horizontal, vertical, or diagonal!</p>
         
         <div class="grid" id="grid"></div>
         
@@ -255,7 +269,7 @@
     <div class="celebration" id="celebration">
         <div class="celebration-message">Congratulations!<br>You found all the words!</div>
         <div class="celebration-fox">🦊</div>
-        <p style="color: #7dac7d; margin-top: 1rem;">The fox is proud of your selective social skills!</p>
+        <p style="color: #7dac7d; margin-top: 1rem; text-align: center; font-size: clamp(14px, 4vw, 16px);">The fox is proud of your selective social skills!</p>
         <button class="celebration-button" onclick="location.reload()">Play Again</button>
     </div>
 
@@ -284,6 +298,8 @@
         let selectedCells = [];
         let isSelecting = false;
         let foundWords = new Set();
+        let touchStartX = 0;
+        let touchStartY = 0;
         
         // Create grid
         const gridElement = document.getElementById('grid');
@@ -302,9 +318,41 @@
         const cells = document.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.addEventListener('mousedown', startSelection);
+            cell.addEventListener('touchstart', handleTouchStart, {passive: false});
             cell.addEventListener('mouseenter', continueSelection);
             cell.addEventListener('mouseup', endSelection);
+            cell.addEventListener('mouseleave', handleMouseLeave);
         });
+
+        document.addEventListener('touchmove', handleTouchMove, {passive: false});
+        document.addEventListener('touchend', endSelection);
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (cell && cell.classList.contains('cell')) {
+                startSelection({target: cell});
+            }
+        }
+        
+        function handleTouchMove(e) {
+            if (!isSelecting) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (cell && cell.classList.contains('cell')) {
+                continueSelection({target: cell});
+            }
+        }
+        
+        function handleMouseLeave() {
+            if (isSelecting) {
+                endSelection();
+            }
+        }
         
         function startSelection(e) {
             isSelecting = true;
@@ -315,9 +363,10 @@
         function continueSelection(e) {
             if (!isSelecting) return;
             
-            if (!selectedCells.includes(e.target)) {
-                selectedCells.push(e.target);
-                e.target.style.background = '#c8e8c8';
+            const cell = e.target;
+            if (!selectedCells.includes(cell)) {
+                selectedCells.push(cell);
+                cell.style.background = '#c8e8c8';
             }
         }
         
@@ -377,13 +426,13 @@
                 }
             }
         }
-        
+
         function showCelebration() {
             const celebration = document.getElementById('celebration');
             celebration.classList.add('active');
             
             // Create confetti
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 80; i++) {
                 createConfetti();
             }
         }
@@ -394,7 +443,7 @@
             confetti.className = 'celebration-confetti';
             
             // Random properties
-            const size = Math.random() * 10 + 5;
+            const size = Math.random() * 8 + 4;
             const color = colors[Math.floor(Math.random() * colors.length)];
             const left = Math.random() * 100;
             const animationDuration = Math.random() * 3 + 2;
@@ -408,7 +457,7 @@
             confetti.style.bottom = '-10px';
             confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
             
-            // Random shape - some as circles, some as squares
+            // Random shape - some as circles, some as squares, some as triangles
             if (Math.random() > 0.7) {
                 confetti.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
                 confetti.style.backgroundColor = 'transparent';
@@ -435,8 +484,9 @@
             }, 10);
         }
         
-        // Prevent text selection
+        // Prevent text selection and touch callout
         document.addEventListener('selectstart', e => e.preventDefault());
+        document.addEventListener('touchcallout', e => e.preventDefault());
     </script>
 </body>
 </html>
